@@ -1,0 +1,73 @@
+#include <bits/stdc++.h>
+using namespace std ;
+
+typedef int ll ;
+int t, cs, n,k ;
+ll dp[805][4005],a[4005][4005], c[4005][4005] ;
+ll C(int i, int j )
+{
+    if(i>j)swap(i,j);
+    ll ret = (c[j][j] - c[i-1][j]-c[j][i-1]+c[i-1][i-1])/2;
+    //cout << i << " " << j << " " << ret << endl ;
+    return ret ;
+}
+const ll inf = 1e9 ;
+void calc(int i, int jl, int jr, int kl,int kr) {
+    //if(jl>=jr||kl>=kr)return ;
+    if(jl>jr)return ;
+    int jm = (jl + jr) / 2;
+    dp[i][jm] = -inf ;
+    int bestk = jm ;
+    for (int k = max(kl,i); k <= min(jm,kr)  ; k++ )
+        if(dp[i - 1][k-1] + C(k,jm) > dp[i][jm] ) {
+            dp[i][jm] = dp[i - 1][k-1] + C(k,jm) ;
+            bestk = k ;
+        }
+    calc(i, jl, jm - 1, kl, bestk);
+    calc(i, jm + 1, jr, bestk, kr);
+}
+char cc ;
+int main() {
+
+    scanf("%d %d",&n,&k);
+    for(int i = 1 ; i <= n ; i++)for(int j = 1 ; j <= n ; j++)
+    {
+        //scanf("%d",&a[i][j] )
+         cc=getchar();
+         while(cc<'0'||cc>'9')cc=getchar();
+         a[i][j] = '0' - cc ;
+         //cout << a[i][j] << endl ;
+    }
+    for(int i = 1 ; i <= n ; i++ ) {
+        for(int j = 1 ; j <= n ; j++ ) {
+            c[i][j] = c[i-1][j]+c[i][j-1]-c[i-1][j-1]+a[i][j] ;
+              //printf("%d ",c[i][j] ) ;
+        }
+        //cout << endl ;
+    }
+    //cout << "\n\n";
+//      for(int i = 1 ; i <= n ; i++ ) {
+//        for(int j = 1 ; j <= n ; j++ ) {
+//            printf("%d ", C(i,j) ) ;
+//        }
+//        cout << endl ;
+//    }
+//    cout << "\n\n\n";
+    for(int i = 1 ; i <= n ; i++)dp[0][i] = C(1,i) ;
+    for(int i = 1 ; i < k ; i++ )calc(i,1,n,1,n);
+    ll ans = 0 ;
+//
+//        for(int i = 0 ; i < k ; i++ )
+//        {
+//            for(int j = 1 ; j <= n ; j++)printf("%d ", dp[i][j] ) ;
+//            printf("\n");
+//        }
+    ans = -dp[k-1][n] ;
+
+    printf("%d\n",ans ) ;
+
+
+
+
+    return 0 ;
+}
