@@ -1,0 +1,44 @@
+#include <bits/stdc++.h>
+using namespace std ;
+
+typedef long long ll ;
+typedef vector<ll> poly ;
+
+ll degree(poly p){return p.size();}
+
+poly FWHT(poly P, bool inverse=false) {
+    for (ll len = 1; 2 * len <= degree(P); len <<= 1) {
+        for (ll i = 0; i < degree(P); i += 2 * len) {
+            for (ll j = 0; j < len; j++) {
+                auto u = P[i + j];
+                auto v = P[i + len + j];
+                P[i + j] = u + v;
+                P[i + len + j] = u - v;
+            }
+        }
+    }
+
+    if (inverse) {
+        for (ll i = 0; i < degree(P); i++)
+            P[i] = P[i] / degree(P);
+    }
+
+    return P;
+}
+poly FWHT(poly p, poly q)
+{
+    poly ip = FWHT(p);
+    poly iq = FWHT(q);
+    for(int i = 0 ; i < ip.size() ; i++)ip[i] *= iq[i] ;
+    poly ret = FWHT(ip,true);
+    return ret ;
+}
+int main()
+{
+
+    poly p ;
+    p=FWHT(p,p);
+    for(auto i : p)cout << i << endl ;
+
+return 0 ;
+}
