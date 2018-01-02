@@ -3,21 +3,24 @@ using namespace std;
 
 const int MAXN = 500+5 ;
 const int INF = 1000000000 ;
-
 struct edge
 {
-    int a, b, cap, flow , yo ;
+    int a, b, cap, flow , yo , x , y;
 };
 
-int n,m,s,t,d[MAXN] , ptr[MAXN] ;
+struct Dinic{
+
+
+int s,t,d[MAXN] , ptr[MAXN] ;
 int capacityOfNode[MAXN]  ;
 vector<edge>e;
 vector<int>g[MAXN];
 
-void addEdge(int a,int b,int cap)
+void addEdge(int a,int b,int cap, int x = -1 , int y= -1)
 {
-    edge e1 = { a, b, cap, 0 , 1 } ;
-    edge e2 = { b, a, 0  , 0 , 0 } ;
+    //cout << a << " " << b << " " << cap  << endl ;
+    edge e1 = { a, b, cap, 0 , 1 , x , y } ;
+    edge e2 = { b, a, 0  , 0 , 0 , x , y } ;
     g[a].push_back((int)e.size());
     e.push_back(e1);
     g[b].push_back((int)e.size());
@@ -80,76 +83,8 @@ int dinic()
     }
     return flow ;
 }
-bool color[MAXN] ;
-
-void dfs2( int u )
-{
-    if(color[u]) return ;
-    //cout << "coloring " << u << endl ;
-    color[u] = true ;
-    for( int i = 0 ; i < g[u].size() ; i++ )
-    {
-        int id = g[u][i] ;
-        if( e[id].cap>e[id].flow  && e[id].yo )
-            dfs2( e[id].b ) ;
-    }
-}
-
-int main()
-{
-    int T , cs = 0 ;
-    cin >> T ;
-    while( cs < T )
-    {
-        cs++ ;
-        for( int i = 0 ; i <= n ; i++  ) g[i].clear() ;
-        e.clear() ;
-        memset(color,0,sizeof(color)) ;
-
-        int x, y , w ;
-        cin >> n >> m ;
-        for( int i = 1 ; i <= n ; i++ ) cin >> capacityOfNode[i] ;
-        for( int i = 0 ; i < m ; i++ )
-        {
-            cin >> x >> y >> w ;
-            addEdge(x,y,w) ;
-        }
-        s = 1 ;
-        t = n ;
-        int maxFlow = dinic()  ;
-        dfs2(1) ;
-
-//    for( int i = 0 ; i < e.size() ; i++ )
-//    {
-//        cout << e[i].a << " " << e[i].b << " " << e[i].flow << " "<<e[i].cap <<  endl ;
-//    }
-        vector < int > ans ;
-        for( int i = 0 ; i < e.size() ; i++ )
-        {
-            if( color[e[i].a] && !color[e[i].b] && e[i].yo )
-                ans.push_back(i) ;
-        }
-        cout << "number of edges : " << ans.size() << endl ;
-        for( int i = 0 ; i < ans.size() ; i++ )
-            cout << e[ans[i]].a << " " << e[ans[i]].b<< endl ;
-        cout << endl << "minimum sum " << maxFlow << endl ;
-    }
-}
+};
 
 
-/*
 
 
-6 9
-0 1 2 3 4 5
-1 2 5
-2 4 8
-1 3 12
-3 2 5
-3 4 9
-3 5 4
-4 5 3
-4 6 7
-5 6 8
-
-*/
