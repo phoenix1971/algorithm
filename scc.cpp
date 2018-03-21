@@ -1,10 +1,10 @@
 #include <bits/stdc++.h>
 using namespace std ;
 typedef unsigned int ui ;
-
+#define Size 100005
 int cs , t ;
-int ck[10004] , oy[10004] , ans , in[10004] ;
-vector < int > bro[10004] , orb[10004] , scc[10004] ;
+int ck[Size] , oy[Size] , ans , in[Size] ;
+vector < int > bro[Size] , orb[Size] , scc[Size] ;
 stack < int > yo ;
 void go(int u )
 {
@@ -38,11 +38,11 @@ int main()
         cs++ ;
         memset(ck,0,sizeof(ck));
         //memset(oy,0,sizeof(oy));
-        for(int i = 1 ; i <= 10000 ; i++ ) oy[i] = i ;
+        for(int i = 1 ; i <= Size ; i++ ) oy[i] = i ;
         memset(in,0,sizeof(in));
         while( !yo.empty())yo.pop();
         ans = 0 ;
-        for( int i = 0 ; i < 10004;i++)bro[i].clear(),orb[i].clear();
+        for( int i = 0 ; i < Size;i++)bro[i].clear(),orb[i].clear();
         int n , m , x, y ;
         scanf("%d %d", &n, &m ) ;
         for( int i = 0 ; i < m ; i++)
@@ -82,24 +82,3 @@ int main()
 
     return 0 ;
  }
-/*
-
-
-1
-8 12
-1 2
-2 3
-3 1
-4 5
-5 4
-1 4
-3 5
-6 7
-7 8
-8 6
-4 6
-5 8
-
-
-
-*/
