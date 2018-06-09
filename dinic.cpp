@@ -12,10 +12,14 @@ struct Dinic{
 
 
 int s,t,d[MAXN] , ptr[MAXN] ;
-int capacityOfNode[MAXN]  ;
 vector<edge>e;
 vector<int>g[MAXN];
 
+void init(){
+    e.clear();
+    memset(d,0,sizeof(d));
+    for(int i = 0; i < MAXN ; i++)g[i].clear();
+}
 void addEdge(int a,int b,int cap, int x = -1 , int y= -1)
 {
     //cout << a << " " << b << " " << cap  << endl ;
@@ -84,7 +88,4 @@ int dinic()
     return flow ;
 }
 };
-
-
-
 
