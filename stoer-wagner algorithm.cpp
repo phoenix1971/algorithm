@@ -1,43 +1,49 @@
 #include <bits/stdc++.h>
 using namespace std ;
+typedef long long ll;
 
-const int maxN = 200 ;
-const int maxint = 1e9 ;
+const ll maxN = 305 ;
+const ll inf = 0x3f3f3f3f ;
 // Stoer-wagner algorithm, complexity: O(n^3)
 // compute the global minimum cut with self-loop ignored.
 
-int n, g[maxN][maxN], v[maxN], d[maxN], vis[maxN];
-
-int stoer_wagner(int n) {
-  int res = maxint;
-  for (int i = 1; i <= n; i++) v[i] = i, vis[i] = 0;
-  while (n > 1) {
-    int p = 2, prev = 1;
-    for (int i = 2; i <= n; ++i) {
-      d[v[i]] = g[v[1]][v[i]];
-      if (d[v[i]] > d[v[p]]) p = i;
-    }
-    vis[v[1]] = n;
-    for (int i = 2; i <= n; ++i) {
-      if (i == n) {
-        res = min(res, d[v[p]]); // if d[v[p]] < res, then s = v[p] & t = v[prev]
-        for (int j = 1; j <= n; ++j) {
-          g[v[prev]][v[j]] += g[v[p]][v[j]];
-          g[v[j]][v[prev]] = g[v[prev]][v[j]];
+ll n,m, g[maxN][maxN];
+bool vis[maxN];
+ll dis[maxN],v[maxN];
+ll stoer_wagner() {
+    ll i, j, now,ans=inf;
+    for(i=0; i<n; i++)v[i]=i+1;
+    while(n>1) {
+        for(now=0,i=1; i<n; i++)dis[v[i]]=0;
+        for(i=1; i<n; i++) {
+            swap(v[now],v[i-1]);
+            for(now=j=i; j<n; j++) {
+                dis[v[j]]+=g[v[i-1]][v[j]];
+                if(dis[v[now]]<dis[v[j]])now=j;
+            }
         }
-        v[p] = v[n--];
-        break;
-      }
-      vis[v[p]] = n;
-      prev = p;
-      p = -1;
-      for (int j = 2; j <= n; ++j) {
-        if (vis[v[j]] != n) {
-          d[v[j]] += g[v[prev]][v[j]];
-          if (p == -1 || d[v[p]] < d[v[j]]) p = j;
-        }
-      }
+        ans=min(ans,dis[v[now]]);
+        for(j=0; j<n; j++)
+            g[v[j]][v[now-1]]=g[v[now-1]][v[j]]+=g[v[j]][v[now]] ;
+        v[now]=v[--n];
     }
-  }
-  return res;
+    return ans ;
 }
+
+
+int main() {
+    ll u,v,w;
+    while(true) {
+        cin>>n>>m>>u;
+        if(n+m+u==0)return 0;
+        memset(g,0,sizeof(g));
+        for(ll i = 0; i<m; i++) {
+            scanf("%lld %lld %lld",&u,&v,&w);
+            g[u][v]+=w;
+            g[v][u]+=w;
+        }
+        cout << stoer_wagner() << endl;
+    }
+    return 0;
+}
+
